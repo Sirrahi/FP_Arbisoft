@@ -8,4 +8,4 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 api = Api(app)
 
-from triumph import routes, models
+from triumph import rfapi, models, routes

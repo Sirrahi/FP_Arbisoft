@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from triumph import api
 from flask import jsonify, abort
-from triumph.models import Category, Item, Sku
+from triumph.models import Category, Product, Sku, Feature
 
 
 class Categories(Resource):
@@ -20,35 +20,54 @@ class Products(Resource):
         if category is None:
             abort(404)
         products = []
-        for product in category.items:
+        for product in category.products:
             products.append({'name': product.name, 'id': product.id})
 
         return jsonify({'products': products})
 
 
-class Product(Resource):
-    def get(self, product_id):
-        item = Item.query.filter_by(id=product_id).first()
+class Features(Resource):
+    def get(self, category_id):
+        category = Category.query.filter_by(id=category_id).first()
+        if category is None:
+            abort(404)
         features = []
+        for feature in category.features:
+            features.append({'name': feature.name, 'id': feature.id})
 
-        for feature in item.features:
-            features.append(feature.name)
+        return jsonify({'features': features})
 
+
+class _Product(Resource):
+    def get(self, product_id):
+        product = Product.query.filter_by(id=product_id).first()
         image_urls = []
 
-        for image_url in item.image_urls:
+        for image_url in product.image_urls:
             image_urls.append(image_url.url)
 
-        return jsonify({'id': item.id, 'name': item.name, 'brand': item.brand,
-                        'description': item.description, 'features': features, 'image_urls': image_urls})
+        return jsonify({'id': product.id, 'name': product.name, 'brand': product.brand,
+                        'gender': product.gender, 'description': product.description, 'image_urls': image_urls})
+
+
+class _Feature(Resource):
+    def get(self, feature_id):
+        feature = Feature.query.filter_by(id=feature_id).first()
+        if feature is None:
+            abort(404)
+        products = []
+        for product in feature.products:
+            products.append({'name': product.name, 'id': product.id})
+
+        return jsonify({'products': products})
 
 
 class Skus(Resource):
     def get(self, product_id):
-        item = Item.query.filter_by(id=product_id).first()
+        product = Product.query.filter_by(id=product_id).first()
         skus = []
 
-        for sku in item.skus:
+        for sku in product.skus:
             skus.append({'id': sku.id, 'color': sku.color})
 
         return jsonify({'skus': skus})
@@ -68,6 +87,8 @@ class SpecificSku(Resource):
 
 api.add_resource(Categories, '/categories', endpoint='categories')
 api.add_resource(Products, '/categories/<int:category_id>/products', endpoint='products')
-api.add_resource(Product, '/products/<int:product_id>', endpoint='product')
+api.add_resource(Features, '/categories/<int:category_id>/features', endpoint='features')
+api.add_resource(_Product, '/products/<int:product_id>', endpoint='product')
+api.add_resource(_Feature, '/features/<int:feature_id>', endpoint='feature')
 api.add_resource(Skus, '/products/<int:product_id>/skus', endpoint='skus')
 api.add_resource(SpecificSku, '/skus/<int:sku_id>', endpoint='sku')

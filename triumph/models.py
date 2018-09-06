@@ -1,15 +1,10 @@
 from triumph import db
 from sqlalchemy import PrimaryKeyConstraint
 
-item_category = db.Table('item_category', db.metadata,
+product_category = db.Table('product_category', db.metadata,
                          db.Column('category_id', db.Integer, db.ForeignKey('category.id')),
-                         db.Column('item_id', db.Integer, db.ForeignKey('item.id'))
+                         db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
                          )
-
-item_feature = db.Table('item_feature', db.metadata,
-                        db.Column('item_id', db.Integer, db.ForeignKey('item.id')),
-                        db.Column('feature_id', db.Integer, db.ForeignKey('feature.id'))
-                        )
 
 
 class Category(db.Model):
@@ -17,21 +12,22 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    items = db.relationship('Item', backref=db.backref('category', lazy='dynamic'), secondary=item_category)
+    features = db.relationship('Feature', backref=db.backref('category'))
+    products = db.relationship('Product', backref=db.backref('category', lazy='dynamic'), secondary=product_category)
 
 
-class Item(db.Model):
-    __tablename__ = 'item'
+class Product(db.Model):
+    __tablename__ = 'product'
 
     id = db.Column(db.Integer)
     name = db.Column(db.String(64))
     brand = db.Column(db.String(64))
-    # gender = db.Column(db.String(16))
+    gender = db.Column(db.String(16))
     description = db.Column(db.String(1024))
     url = db.Column(db.String(1024))
-    features = db.relationship('Feature', backref=db.backref('feature_item', lazy='dynamic'), secondary=item_feature)
-    skus = db.relationship('Sku', backref=db.backref('sku_item'))
-    image_urls = db.relationship('ImageUrl', backref=db.backref('image_item'))
+    feature_id = db.Column(db.Integer, db.ForeignKey('feature.id'))
+    skus = db.relationship('Sku', backref=db.backref('sku_product'))
+    image_urls = db.relationship('ImageUrl', backref=db.backref('image_product'))
 
     __table_args__ = (
         PrimaryKeyConstraint("id", name="id"),
@@ -43,6 +39,8 @@ class Feature(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    products = db.relationship('Product', backref=db.backref('feature'))
 
 
 class Sku(db.Model):
@@ -53,7 +51,7 @@ class Sku(db.Model):
     size = db.Column(db.String(16))
     price = db.Column(db.String(16))
     currency = db.Column(db.String(16))
-    item_id = db.Column(db.Integer, db.ForeignKey('item.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     image_urls = db.relationship('ImageUrl', backref=db.backref('image_sku'))
 
 
@@ -62,7 +60,7 @@ class ImageUrl(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String(1024))
-    item_id = db.Column(db.Integer, db.ForeignKey('item.id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     sku_id = db.Column(db.Integer, db.ForeignKey('sku.id'))
 
 

@@ -1,8 +1,9 @@
 from triumph import app
 from flask import render_template
-from triumph.models import Category, Item
+from triumph.models import Category, Product
 
 categories = Category.query.all()
+
 
 @app.route('/')
 @app.route('/categories')
@@ -24,6 +25,6 @@ def category(category_id):
 
 @app.route('/products/<int:product_id>')
 def product(product_id):
-    product = Item.query.filter_by(id=product_id).first()
+    product = Product.query.filter_by(id=product_id).first()
 
     return render_template('product.html', product=product, categories=categories)
