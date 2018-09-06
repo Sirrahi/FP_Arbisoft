@@ -2,13 +2,17 @@
 
 {% block content %}
     <div>
-        <h1>{{ name }}</h1><hr>
-        {% for product in products %}
-            <ul>
-                <li><a href='{{ url_for('product', product_id=product.id) }}'>{{ product.name }}<br>
-                <img src='{{ product.image_urls[0].url }}' alt='{{ product.name }}' style='width:250px;height:300px;'>
-                </a></li><br><br><br>
-            </ul>
+        <h2 style="text-align: center">{{ name }}</h2>
+        <h3 style="display: inline">Sub-Categories</h3>
+        {% for sub_category in category.sub_categories %}
+            || <a href='{{ url_for('sub_category', sub_category_id=sub_category.id) }}'>{{ sub_category.name }}</a>
+        {%  endfor %}
+        <hr>
+        {% for product in category.products %}
+                <a href='{{ url_for('product', product_id=product.id) }}'>{{ product.name }}<br>
+                <img src='{{ product.image_urls[0].url }}' alt='{{ product.name }}' style='width:125px;height:150px;'>
+                <br><br><br>
+                </a>
         {% endfor %}
     </div>
 {% endblock %}

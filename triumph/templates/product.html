@@ -1,10 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
     <div>
-        <h1>{{ product.name }}</h1>
-        {% for feature in product.features %}
-        <h2>{{ feature.name }}</h2><hr>
-        {%  endfor %}
-
+        <h2 style="text-align: center">{{ product.name }}</h2>
+        {% for image_url in product.image_urls %}
+            <img src="{{ image_url.url }}" alt="{{ product.name }}" style="width:125px;height:150px;">
+        {% endfor %}
+        <br><br>
+        <h4 style="display: inline">Brand: </h4>
+        {{ product.brand }}
+        <br>
+        <h4 style="display: inline">Gender: </h4>
+        {{ product.gender }}
+        <br>
+        <h4 style="display: inline">Description: </h4>
+        {{ product.description }}
+        <br>
+        <h4>Available In:</h4>
+        {% for color in product.skus %}
+            <h5>{{ color }}</h5>
     </div>
 {% endblock %}

@@ -12,8 +12,8 @@ class Category(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    features = db.relationship('Feature', backref=db.backref('category'))
-    products = db.relationship('Product', backref=db.backref('category', lazy='dynamic'), secondary=product_category)
+    sub_categories = db.relationship('SubCategory', backref=db.backref('category'))
+    products = db.relationship('Product', backref=db.backref('category'), secondary=product_category)
 
 
 class Product(db.Model):
@@ -25,7 +25,7 @@ class Product(db.Model):
     gender = db.Column(db.String(16))
     description = db.Column(db.String(1024))
     url = db.Column(db.String(1024))
-    feature_id = db.Column(db.Integer, db.ForeignKey('feature.id'))
+    sub_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
     skus = db.relationship('Sku', backref=db.backref('sku_product'))
     image_urls = db.relationship('ImageUrl', backref=db.backref('image_product'))
 
@@ -34,13 +34,13 @@ class Product(db.Model):
     )
 
 
-class Feature(db.Model):
-    __tablename__ = 'feature'
+class SubCategory(db.Model):
+    __tablename__ = 'sub_category'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    products = db.relationship('Product', backref=db.backref('feature'))
+    products = db.relationship('Product', backref=db.backref('sub_category'))
 
 
 class Sku(db.Model):
