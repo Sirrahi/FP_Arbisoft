@@ -1,22 +1,52 @@
 {% extends 'base.html' %}
 {% block content %}
     <div>
+        <h4 style="display: inline">{{ product.category.name }}</h4>
+
+        {% for sub_category in product.category.sub_categories %}
+            || <a href='{{ url_for('sub_category', category_id=product.category.id,
+            sub_category_id=product.sub_category.id) }}'>{{ product.sub_category.name }}</a>
+        {%  endfor %}
+
+        <hr>
+        <a href="{{ url_for('index') }}">Home</a> //
+        <a href="{{ url_for('category', category_id=product.category.id) }}">{{ product.category.name }}</a> //
+        <a href="{{ url_for('sub_category', category_id=product.category.id,
+           sub_category_id=product.sub_category.id) }}">{{ product.sub_category.name }}</a> //
+        <a href="{{ url_for('product', category_id=product.category.id,
+           sub_category_id=product.sub_category.id, product_id=product.id) }}">{{ product.name }}</a>
+
         <h2 style="text-align: center">{{ product.name }}</h2>
+
         {% for image_url in product.image_urls %}
             <img src="{{ image_url.url }}" alt="{{ product.name }}" style="width:125px;height:150px;">
         {% endfor %}
+
         <br><br>
         <h4 style="display: inline">Brand: </h4>
         {{ product.brand }}
+
+        <br>
+        <h4 style="display: inline">Price: </h4>
+        {{ product.price }} {{ product.currency }}
+
         <br>
         <h4 style="display: inline">Gender: </h4>
         {{ product.gender }}
+
         <br>
         <h4 style="display: inline">Description: </h4>
         {{ product.description }}
+
         <br>
         <h4>Available In:</h4>
-        {% for color in product.skus %}
-            <h5>{{ color }}</h5>
+
+        {% for sku in product.skus %}
+            <a href="{{ url_for('sku', category_id=product.category.id,
+            sub_category_id=product.sub_category.id, product_id=product.id, sku_id=sku.id) }}">
+                {{ sku.color }}-{{ sku.size }}</a>
+            <br>
+        {% endfor %}
+
     </div>
 {% endblock %}

@@ -1,11 +1,6 @@
 from triumph import db
 from sqlalchemy import PrimaryKeyConstraint
 
-product_category = db.Table('product_category', db.metadata,
-                         db.Column('category_id', db.Integer, db.ForeignKey('category.id')),
-                         db.Column('product_id', db.Integer, db.ForeignKey('product.id'))
-                         )
-
 
 class Category(db.Model):
     __tablename__ = 'category'
@@ -13,7 +8,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     sub_categories = db.relationship('SubCategory', backref=db.backref('category'))
-    products = db.relationship('Product', backref=db.backref('category'), secondary=product_category)
+    products = db.relationship('Product', backref=db.backref('category'))
 
 
 class Product(db.Model):
@@ -22,12 +17,15 @@ class Product(db.Model):
     id = db.Column(db.Integer)
     name = db.Column(db.String(64))
     brand = db.Column(db.String(64))
+    price = db.Column(db.String(16))
+    currency = db.Column(db.String(16))
     gender = db.Column(db.String(16))
     description = db.Column(db.String(1024))
     url = db.Column(db.String(1024))
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     sub_category_id = db.Column(db.Integer, db.ForeignKey('sub_category.id'))
-    skus = db.relationship('Sku', backref=db.backref('sku_product'))
-    image_urls = db.relationship('ImageUrl', backref=db.backref('image_product'))
+    skus = db.relationship('Sku', backref=db.backref('product'))
+    image_urls = db.relationship('ImageUrl', backref=db.backref('product'))
 
     __table_args__ = (
         PrimaryKeyConstraint("id", name="id"),
@@ -52,7 +50,7 @@ class Sku(db.Model):
     price = db.Column(db.String(16))
     currency = db.Column(db.String(16))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
-    image_urls = db.relationship('ImageUrl', backref=db.backref('image_sku'))
+    image_urls = db.relationship('ImageUrl', backref=db.backref('sku'))
 
 
 class ImageUrl(db.Model):

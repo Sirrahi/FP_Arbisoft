@@ -4,9 +4,14 @@
     <div>
         {% for category in categories %}
             {% for product in category.products %}
-                <a href='{{ url_for('product', product_id=product.id) }}'>{{ product.name }}</a><br>
-                <a href='{{ url_for('sub_category', sub_category_id=product.sub_category.id) }}'>{{ product.sub_category.name }}</a><br>
-                <a href='{{ url_for('product', product_id=product.id) }}'>
+                <a href='{{ url_for('product', category_id=category.id, sub_category_id = product.sub_category.id,
+                product_id=product.id) }}'>{{ product.name }}</a>
+                <br>
+                <a href='{{ url_for('sub_category', category_id=category.id,
+                sub_category_id=product.sub_category.id) }}'>{{ product.sub_category.name }}</a>
+                <br>
+                <a href='{{ url_for('product', category_id=category.id,
+                sub_category_id = product.sub_category.id, product_id=product.id) }}'>
                     <img src='{{ product.image_urls[0].url }}' alt='{{ product.name }}'
                          style='width:125px;height:150px;'></a>
                 <br><br><br>

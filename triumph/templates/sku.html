@@ -1,0 +1,38 @@
+{% extends 'base.html'%}
+{% block content %}
+    <h4 style="display: inline">{{ sku.product.category.name }}</h4>
+
+    {% for sub_category in sku.product.category.sub_categories %}
+        || <a href='{{ url_for('sub_category', category_id=sku.product.category.id,
+        sub_category_id=sku.product.sub_category.id) }}'>{{ sku.product.sub_category.name }}</a>
+    {%  endfor %}
+
+    <hr>
+    <a href="{{ url_for('index') }}">Home</a> //
+    <a href="{{ url_for('category', category_id=sku.product.category.id) }}">{{ sku.product.category.name }}</a> //
+    <a href="{{ url_for('sub_category', category_id=sku.product.category.id,
+       sub_category_id=sku.product.sub_category.id) }}">{{ sku.product.sub_category.name }}</a> //
+    <a href="{{ url_for('product', category_id=sku.product.category.id,
+       sub_category_id=sku.product.sub_category.id, product_id=sku.product.id) }}">{{ sku.product.name }}</a> //
+    <a href="{{ url_for('sku', category_id=sku.product.category.id, sub_category_id=sku.product.sub_category.id,
+       product_id=sku.product.id, sku_id=sku.id) }}">{{ sku.color }}-{{ sku.size }}</a>
+
+    <h3 style="text-align: center">{{ sku.color}}-{{ sku.size }}</h3>
+    <br>
+
+    {% for image_url in sku.image_urls %}
+        <img src="{{ image_url.url }}" alt="{{ sku.color }}" style="width:125px;height:150px;">
+    {% endfor %}
+
+    <br><br>
+    <h4 style="display: inline">Size: </h4>
+    {{ sku.size }}
+
+    <br>
+    <h4 style="display: inline">Color: </h4>
+    {{ sku.color }}
+
+    <br>
+    <h4 style="display: inline">Price: </h4>
+    {{ sku.price }} {{ sku.currency }}
+{% endblock %}

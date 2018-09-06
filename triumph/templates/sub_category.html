@@ -1,10 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
+    <h4 style="display: inline">{{ category.name }}</h4>
+
+    {% for sub_category in category.sub_categories %}
+            || <a href='{{ url_for('sub_category', category_id=category.id,
+            sub_category_id=sub_category.id) }}'>{{ sub_category.name }}</a>
+    {%  endfor %}
+
+    <hr>
+
+    <a href="{{ url_for('index') }}">Home</a> //
+    <a href="{{ url_for('category', category_id=category.id) }}">{{ category.name }}</a> //
+    <a href="{{ url_for('sub_category', category_id=category.id,
+       sub_category_id=sub_category.id) }}">{{ sub_category.name }}</a>
+
+    <br><br><br>
     <h2 style="text-align: center">{{ name }}</h2>
+
     {% for product in products %}
-        <a href='{{ url_for('product', product_id=product.id) }}'>{{ product.name }}<br>
+        <a href='{{ url_for('product', category_id=product.category.id, sub_category_id=product.sub_category.id,
+        product_id=product.id) }}'>{{ product.name }}
+            <br>
             <img src='{{ product.image_urls[0].url }}' alt='{{ product.name }}' style='width:125px;height:150px;'>
             <br><br><br>
         </a>
     {% endfor %}
+
 {% endblock %}
