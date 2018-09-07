@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1>Add to Cart</h1>
+    <h3>{{ sku.color }}-{{ sku.size }}</h3>
+    <br>
+
+    {% for image_url in sku.image_urls %}
+        <img src="{{ image_url.url }}" alt="{{ sku.color }}" style="width:125px;height:150px;">
+    {% endfor %}
+
+    <br><br>
+    <h4 style="display: inline">Size: </h4>
+    {{ sku.size }}
+
+    <br>
+    <h4 style="display: inline">Color: </h4>
+    {{ sku.color }}
+
+    <br>
+    <h4 style="display: inline">Price: </h4>
+    {{ sku.price }} {{ sku.currency }}
+
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.quantity.label }}<br>
+            {{ form.quantity(size=16) }}<br>
+            {% for error in form.quantity.errors %}
+                <span style="color: blue;">{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

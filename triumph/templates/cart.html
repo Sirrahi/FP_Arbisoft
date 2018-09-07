@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h1>My Cart</h1>
+    {% for cartitem in user.cartitems %}
+        <a href="{{ url_for("rmcartitem", cartitem_id=cartitem.id) }}">Remove Item</a>
+        <br>
+        <img src="{{ cartitem.image_url }}" alt="{{ cartitem.name }}" style="width:125px;height:150px;">
+
+        <br>
+        <h3 style="display: inline">Name: </h3>
+        {{ cartitem.name }}
+
+        <br>
+        <h3 style="display: inline">Color: </h3>
+        {{ cartitem.color }}
+
+        <br>
+        <h3 style="display: inline">Size: </h3>
+        {{ cartitem.Size }}
+
+        <br>
+        <h3 style="display: inline">Price: </h3>
+        {{ cartitem.Price }}{{ cartitem.currency }}
+
+        <br>
+        <h3 style="display: inline">Quantity: </h3>
+        {{ cartitem.quantity }}
+
+        <br><br><br>
+    {% endfor %}
+{% endblock %}

@@ -1,20 +1,20 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
     <div>
         <h4 style="display: inline">{{ product.category.name }}</h4>
 
-        {% for sub_category in product.category.sub_categories %}
-            || <a href='{{ url_for('sub_category', category_id=product.category.id,
-            sub_category_id=product.sub_category.id) }}'>{{ product.sub_category.name }}</a>
+        {% for sub_category in category.sub_categories %}
+            || <a href="{{ url_for("sub_category", category_id=category.id,
+            sub_category_id=sub_category.id) }}">{{ sub_category.name }}</a>
         {%  endfor %}
 
         <hr>
-        <a href="{{ url_for('index') }}">Home</a> //
-        <a href="{{ url_for('category', category_id=product.category.id) }}">{{ product.category.name }}</a> //
-        <a href="{{ url_for('sub_category', category_id=product.category.id,
-           sub_category_id=product.sub_category.id) }}">{{ product.sub_category.name }}</a> //
-        <a href="{{ url_for('product', category_id=product.category.id,
-           sub_category_id=product.sub_category.id, product_id=product.id) }}">{{ product.name }}</a>
+        <a href="{{ url_for("index") }}">Home</a> //
+        <a href="{{ url_for("category", category_id=category.id) }}">{{ category.name }}</a> //
+        <a href="{{ url_for("sub_category", category_id=category.id,
+           sub_category_id=sub_category.id) }}">{{ sub_category.name }}</a> //
+        <a href="{{ url_for("product", category_id=category.id,
+           sub_category_id=sub_category.id, product_id=product.id) }}">{{ product.name }}</a>
 
         <h2 style="text-align: center">{{ product.name }}</h2>
 
@@ -42,7 +42,7 @@
         <h4>Available In:</h4>
 
         {% for sku in product.skus %}
-            <a href="{{ url_for('sku', category_id=product.category.id,
+            <a href="{{ url_for("sku", category_id=product.category.id,
             sub_category_id=product.sub_category.id, product_id=product.id, sku_id=sku.id) }}">
                 {{ sku.color }}-{{ sku.size }}</a>
             <br>
